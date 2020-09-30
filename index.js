@@ -9,7 +9,7 @@ const vk = new VK({
   token: process.env.TOKEN
 })
 
-const db = new Map() // { peerid: { start, used: [Number], [constraints] } }
+const db = new Map() // { peerid: { used: [Number], [constraints] } }
 
 const hearManager = new HearManager()
 vk.updates.on('message_new', hearManager.middleware)
@@ -17,7 +17,7 @@ vk.updates.on('message_new', hearManager.middleware)
 hearManager.hear('!peerid', async ctx => ctx.send(ctx.peerId))
 
 hearManager.hear('!minesweep', async ctx => {
-  if (db.get(ctx.peerId)) return ctx.send('ща падажжи')
+  if (db.has(ctx.peerId)) return ctx.send('ща падажжи я ему въебу')
   return ctx.send('/пин начать')
 })
 
@@ -39,7 +39,6 @@ vk.updates.on('message_new', async ctx => {
     const attempt = possible[Math.floor(Math.random() * possible.length)]
 
     db.set(ctx.peerId, {
-      start: Date.now(),
       used: [attempt],
       constraints: [constraint]
     })
@@ -74,6 +73,7 @@ vk.updates.on('message_new', async ctx => {
     return ctx.send(`/пин ${attempt} (ещё ${possible.length - 1} чисел, есть ${dbObj.constraints.length} подсказок)`)
   } else if (regexWin.test(ctx.text)) {
     const dbObj = db.get(ctx.peerId)
+    db.delete(ctx.peerId)
     return ctx.send(`GG за ${dbObj.used.length} попыток разъебал лол`)
   }
 })

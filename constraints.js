@@ -1,26 +1,21 @@
 const constraints = [
   {
-    type: 'smaller',
     regex: /(\d{4}) (меньше|не больше) чем пинкод/,
     filter: (num, match) => num >= Number(match[1])
   },
   {
-    type: 'greater',
     regex: /(\d{4}) (больше|не меньше) чем пинкод/,
     filter: (num, match) => num <= Number(match[1])
   },
   {
-    type: 'even/odd',
     regex: /Это число (не|)четное/,
     filter: (num, match) => num % 2 === (match[1].length ? 1 : 0)
   },
   {
-    type: 'sum',
     regex: /В сумме цифр пинкод даст (\d+)/,
     filter: (num, match) => num.toString().split('').reduce((a, v) => +a + +v, 0) === Number(match[1])
   },
   {
-    type: 'number sum',
     regex: /Если сложить (\d) и (\d) цифры пинкода то получится (\d+)/,
     filter: (num, match) => {
       const id1 = Number(match[1]) - 1
@@ -31,7 +26,6 @@ const constraints = [
     }
   },
   {
-    type: 'number even/odd',
     regex: /(\d) цифра пинкода (не|)чётная/,
     filter: (num, match) => {
       const i = Number(match[1]) - 1
@@ -40,7 +34,6 @@ const constraints = [
     }
   },
   {
-    type: 'remainder',
     regex: /Пинкод (не |)делится на (\d+) без остатка/,
     filter: (num, match) => {
       if (match[1].length) return num % Number(match[2]) !== 0
@@ -48,8 +41,6 @@ const constraints = [
     }
   }
 ]
-
-// export default constraints
 
 export class Constraint {
   constructor (text) {
